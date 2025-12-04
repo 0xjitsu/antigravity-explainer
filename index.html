@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Anti-Gravity: An interactive explainer for agentic coding workflows. Learn about Inbox, Playground, and Workspaces.">
+    <meta name="theme-color" content="#050505">
     <title>Anti-Gravity | The Future of Coding</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,107 +12,107 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="bg-canvas"></canvas>
-    
-    <nav class="glass-nav">
-        <div class="logo">ANTI-GRAVITY</div>
-        <div class="status-indicator">
-            <span class="dot"></span> System Active
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+    <nav class="glass-nav" role="navigation" aria-label="Main navigation">
+        <div class="logo" aria-label="Anti-Gravity Home">ANTI-GRAVITY</div>
+        <div class="status-indicator" role="status" aria-live="polite">
+            <span class="dot" aria-hidden="true"></span> System Active
         </div>
     </nav>
 
-    <main>
-        <section id="hero" class="hero-section">
+    <main role="main">
+        <section id="hero" class="hero-section" aria-labelledby="hero-title">
             <div class="hero-content">
-                <h1 class="glitch-text" data-text="AGENTIC CODING">AGENTIC CODING</h1>
+                <h1 id="hero-title" class="glitch-text" data-text="AGENTIC CODING">AGENTIC CODING</h1>
                 <p class="subtitle">Welcome to the console. Your workflow, elevated.</p>
-                <div class="scroll-indicator">
+                <div class="scroll-indicator" aria-hidden="true">
                     <span>EXPLORE SYSTEM</span>
                     <div class="arrow">↓</div>
                 </div>
             </div>
         </section>
 
-        <section id="concepts" class="cards-container">
-            <!-- Card 1: Inbox -->
-            <div class="glass-card tilt-card" data-tilt>
+        <section id="concepts" class="cards-container" aria-labelledby="concepts-heading">
+            <h2 id="concepts-heading" class="visually-hidden">Core Concepts</h2>
+
+            <article class="glass-card tilt-card" data-tilt aria-labelledby="inbox-title">
                 <div class="card-content">
-                    <div class="icon-box">📥</div>
-                    <h2>The Inbox</h2>
+                    <div class="icon-box" aria-hidden="true">📥</div>
+                    <h3 id="inbox-title">The Inbox</h3>
                     <p class="mono-text">COMMAND CENTER</p>
                     <p class="description">
-                        Your triage station. This is where raw requests land before they become reality. 
+                        Your triage station. This is where raw requests land before they become reality.
                         Think of it as the air traffic control tower for your ideas.
                     </p>
                 </div>
-                <div class="card-glow"></div>
-            </div>
+                <div class="card-glow" aria-hidden="true"></div>
+            </article>
 
-            <!-- Card 2: Playground -->
-            <div class="glass-card tilt-card" data-tilt>
+            <article class="glass-card tilt-card" data-tilt aria-labelledby="playground-title">
                 <div class="card-content">
-                    <div class="icon-box">🎡</div>
-                    <h2>The Playground</h2>
+                    <div class="icon-box" aria-hidden="true">🎡</div>
+                    <h3 id="playground-title">The Playground</h3>
                     <p class="mono-text">SANDBOX ENVIRONMENT</p>
                     <p class="description">
-                        A safe space for chaos. Experiment, break things, and prototype rapidly. 
+                        A safe space for chaos. Experiment, break things, and prototype rapidly.
                         Nothing here is permanent unless you want it to be.
-                        <br><br>
+                    </p>
+                    <p class="description">
                         <span class="highlight">Current Location: /playground/solitary-radiation</span>
                     </p>
                 </div>
-                <div class="card-glow"></div>
-            </div>
+                <div class="card-glow" aria-hidden="true"></div>
+            </article>
 
-            <!-- Card 3: Workspaces -->
-            <div class="glass-card tilt-card" data-tilt>
+            <article class="glass-card tilt-card" data-tilt aria-labelledby="workspaces-title">
                 <div class="card-content">
-                    <div class="icon-box">🏗️</div>
-                    <h2>Workspaces</h2>
+                    <div class="icon-box" aria-hidden="true">🏗️</div>
+                    <h3 id="workspaces-title">Workspaces</h3>
                     <p class="mono-text">PRODUCTION ZONES</p>
                     <p class="description">
-                        Where real work happens. Persistent, structured, and serious. 
+                        Where real work happens. Persistent, structured, and serious.
                         Map these to your actual project folders to build long-term value.
                     </p>
                 </div>
-                <div class="card-glow"></div>
-            </div>
+                <div class="card-glow" aria-hidden="true"></div>
+            </article>
         </section>
 
-        <section id="storage" class="split-section">
+        <section id="storage" class="split-section" aria-labelledby="storage-heading">
             <div class="glass-panel">
-                <h2>The Storage Model</h2>
-                <div class="diagram-container">
+                <h2 id="storage-heading">The Storage Model</h2>
+                <div class="diagram-container" role="img" aria-label="Diagram showing local machine connected to cloud, with cloud marked as not available">
                     <div class="node local">
                         <span class="node-label">LOCAL MACHINE</span>
                         <div class="node-dot"></div>
                     </div>
-                    <div class="connection-line"></div>
+                    <div class="connection-line" aria-hidden="true"></div>
                     <div class="node cloud dimmed">
                         <span class="node-label">CLOUD (N/A)</span>
                         <div class="node-dot"></div>
                     </div>
                 </div>
                 <p>
-                    <strong>Privacy First.</strong> Everything lives on your machine. 
+                    <strong>Privacy First.</strong> Everything lives on your machine.
                     The "Brain" is local. The Code is local.
                 </p>
             </div>
-            
+
             <div class="glass-panel highlight-panel">
                 <h2>Go Quantum (Portable)</h2>
                 <p>Don't rely on the agent's internal memory.</p>
-                <ul class="feature-list">
+                <ul class="feature-list" role="list">
                     <li>Initialize <code>git init</code></li>
                     <li>Save context in <code>/docs</code></li>
                     <li>Push to GitHub/GitLab</li>
                 </ul>
-                <button class="action-btn">INITIATE GIT PROTOCOL</button>
+                <button class="action-btn" type="button" aria-label="Initialize Git repository">INITIATE GIT PROTOCOL</button>
             </div>
         </section>
     </main>
 
-    <footer>
+    <footer role="contentinfo">
         <p>ANTI-GRAVITY CONSOLE // V1.0</p>
     </footer>
 
