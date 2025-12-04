@@ -73,38 +73,7 @@ jobs:
           path: test-results/
           retention-days: 7
 
-  deploy-preview:
-    name: Deploy Preview
-    runs-on: ubuntu-latest
-    needs: test
-    if: github.event_name == 'pull_request'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Deploy to Vercel (Preview)
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          github-comment: true
-
-  deploy-production:
-    name: Deploy Production
-    runs-on: ubuntu-latest
-    needs: test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Deploy to Vercel (Production)
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+  # Deployment is handled automatically by Vercel's GitHub integration
+  # Preview deployments: Created for every PR
+  # Production deployments: Triggered on merge to main
+  # No secrets/tokens needed - Vercel connects directly to GitHub
