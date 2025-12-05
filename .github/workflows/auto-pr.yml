@@ -1,0 +1,42 @@
+name: Auto Create PR
+
+on:
+  push:
+    branches:
+      - 'claude/**'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-pr:
+    name: Create Pull Request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Check if PR already exists for this branch
+          EXISTING_PR=$(gh pr list --head "${{ github.ref_name }}" --json number --jq '.[0].number')
+
+          if [ -z "$EXISTING_PR" ]; then
+            # Create new PR
+            gh pr create \
+              --title "${{ github.event.head_commit.message }}" \
+              --body "## Automated PR from Claude
+
+          **Branch:** \`${{ github.ref_name }}\`
+
+          ---
+          *This PR was automatically created and will auto-merge when CI passes.*" \
+              --base main \
+              --head "${{ github.ref_name }}"
+            echo "PR created successfully"
+          else
+            echo "PR #$EXISTING_PR already exists for this branch"
+          fi

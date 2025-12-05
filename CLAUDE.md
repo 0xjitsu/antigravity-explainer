@@ -112,12 +112,12 @@ GitHub Actions workflow (`.github/workflows/ci.yml`):
 
 When Claude makes changes:
 1. Claude commits to `claude/*` branch and pushes
-2. PR is created automatically
+2. **PR is created automatically** (via `.github/workflows/auto-pr.yml`)
 3. CI runs (lint + tests)
-4. If tests pass → auto-merge to main
+4. **If tests pass → auto-merge to main** (via auto-merge job)
 5. Vercel deploys to production
 
-**No manual intervention required.**
+**Fully automated. No clicks required.**
 
 ### Prerequisites for Auto-Merge
 - Enable "Allow auto-merge" in GitHub repo settings (Settings → General → Pull Requests)
