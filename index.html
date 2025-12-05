@@ -3,29 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anti-Gravity | The Future of Coding</title>
+    <title>Anti-Gravity | Enter the Flow State</title>
+    <meta name="description" content="Anti-Gravity — where code writes itself. An agentic development environment that responds to your presence.">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◉</text></svg>">
 </head>
 <body>
     <canvas id="bg-canvas"></canvas>
-    
+
     <nav class="glass-nav">
         <div class="logo">ANTI-GRAVITY</div>
+        <!-- Presence toggle injected by JS -->
         <div class="status-indicator">
-            <span class="dot"></span> System Active
+            <span class="dot"></span>
+            <span>System Online</span>
         </div>
     </nav>
 
     <main>
         <section id="hero" class="hero-section">
             <div class="hero-content">
-                <h1 class="glitch-text" data-text="AGENTIC CODING">AGENTIC CODING</h1>
-                <p class="subtitle">Welcome to the console. Your workflow, elevated.</p>
+                <h1 class="glitch-text" data-text="DEFY THE FRICTION">DEFY THE FRICTION</h1>
+                <p class="subtitle">
+                    A development environment that responds to your presence.
+                    Think less about tooling. Build at the speed of thought.
+                </p>
                 <div class="scroll-indicator">
-                    <span>EXPLORE SYSTEM</span>
+                    <span>ENTER THE SYSTEM</span>
                     <div class="arrow">↓</div>
                 </div>
             </div>
@@ -35,12 +48,13 @@
             <!-- Card 1: Inbox -->
             <div class="glass-card tilt-card" data-tilt>
                 <div class="card-content">
-                    <div class="icon-box">📥</div>
+                    <div class="icon-box">◈</div>
                     <h2>The Inbox</h2>
-                    <p class="mono-text">COMMAND CENTER</p>
+                    <p class="mono-text">SIGNAL PROCESSING</p>
                     <p class="description">
-                        Your triage station. This is where raw requests land before they become reality. 
-                        Think of it as the air traffic control tower for your ideas.
+                        Raw ideas land here before becoming reality.
+                        Triage, prioritize, execute. Your cognitive buffer
+                        for everything that demands attention.
                     </p>
                 </div>
                 <div class="card-glow"></div>
@@ -49,14 +63,13 @@
             <!-- Card 2: Playground -->
             <div class="glass-card tilt-card" data-tilt>
                 <div class="card-content">
-                    <div class="icon-box">🎡</div>
+                    <div class="icon-box">◎</div>
                     <h2>The Playground</h2>
-                    <p class="mono-text">SANDBOX ENVIRONMENT</p>
+                    <p class="mono-text">ZERO CONSEQUENCE ZONE</p>
                     <p class="description">
-                        A safe space for chaos. Experiment, break things, and prototype rapidly. 
-                        Nothing here is permanent unless you want it to be.
-                        <br><br>
-                        <span class="highlight">Current Location: /playground/solitary-radiation</span>
+                        Break things on purpose. Prototype without fear.
+                        Every experiment here is temporary unless you
+                        decide otherwise. Chaos is the point.
                     </p>
                 </div>
                 <div class="card-glow"></div>
@@ -65,53 +78,55 @@
             <!-- Card 3: Workspaces -->
             <div class="glass-card tilt-card" data-tilt>
                 <div class="card-content">
-                    <div class="icon-box">🏗️</div>
-                    <h2>Workspaces</h2>
-                    <p class="mono-text">PRODUCTION ZONES</p>
+                    <div class="icon-box">◐</div>
+                    <h2>The Workspace</h2>
+                    <p class="mono-text">PERSISTENT STATE</p>
                     <p class="description">
-                        Where real work happens. Persistent, structured, and serious. 
-                        Map these to your actual project folders to build long-term value.
+                        Where momentum compounds. Long-running projects
+                        with full context retention. The agent remembers
+                        what you built, why you built it, and what's next.
                     </p>
                 </div>
                 <div class="card-glow"></div>
             </div>
         </section>
 
-        <section id="storage" class="split-section">
+        <section id="philosophy" class="split-section">
             <div class="glass-panel">
-                <h2>The Storage Model</h2>
+                <h2>Local-First Architecture</h2>
                 <div class="diagram-container">
                     <div class="node local">
-                        <span class="node-label">LOCAL MACHINE</span>
+                        <span class="node-label">YOUR MACHINE</span>
                         <div class="node-dot"></div>
                     </div>
                     <div class="connection-line"></div>
                     <div class="node cloud dimmed">
-                        <span class="node-label">CLOUD (N/A)</span>
+                        <span class="node-label">CLOUD</span>
                         <div class="node-dot"></div>
                     </div>
                 </div>
-                <p>
-                    <strong>Privacy First.</strong> Everything lives on your machine. 
-                    The "Brain" is local. The Code is local.
+                <p class="description">
+                    <strong>Everything lives on your hardware.</strong>
+                    Context, memory, code — all local. No vendor lock-in.
+                    No data leaving your perimeter unless you want it to.
                 </p>
             </div>
-            
+
             <div class="glass-panel highlight-panel">
-                <h2>Go Quantum (Portable)</h2>
-                <p>Don't rely on the agent's internal memory.</p>
+                <h2>Escape Velocity</h2>
+                <p class="description">Make your context portable. Don't depend on ephemeral state.</p>
                 <ul class="feature-list">
-                    <li>Initialize <code>git init</code></li>
-                    <li>Save context in <code>/docs</code></li>
-                    <li>Push to GitHub/GitLab</li>
+                    <li>Version with <code>git init</code></li>
+                    <li>Document in <code>/context</code></li>
+                    <li>Sync anywhere you want</li>
                 </ul>
-                <button class="action-btn">INITIATE GIT PROTOCOL</button>
+                <button class="action-btn">INITIALIZE PROTOCOL</button>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>ANTI-GRAVITY CONSOLE // V1.0</p>
+        <p>ANTI-GRAVITY // PRESENCE-AWARE DEVELOPMENT</p>
     </footer>
 
     <script src="script.js"></script>
