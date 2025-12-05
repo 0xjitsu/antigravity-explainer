@@ -105,7 +105,22 @@ Upload `index.html`, `style.css`, `script.js` to any static host.
 GitHub Actions workflow (`.github/workflows/ci.yml`):
 1. **Lint** - Validates HTML/CSS
 2. **E2E Tests** - Runs Playwright tests
-3. **Deploy** - Pushes to Vercel (on main branch)
+3. **Auto-Merge** - Automatically merges `claude/*` branches when tests pass
+4. **Deploy** - Vercel deploys automatically on merge to main
+
+### Automated Deployment Workflow
+
+When Claude makes changes:
+1. Claude commits to `claude/*` branch and pushes
+2. PR is created automatically
+3. CI runs (lint + tests)
+4. If tests pass → auto-merge to main
+5. Vercel deploys to production
+
+**No manual intervention required.**
+
+### Prerequisites for Auto-Merge
+- Enable "Allow auto-merge" in GitHub repo settings (Settings → General → Pull Requests)
 
 ## Code Guidelines
 
