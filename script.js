@@ -1,156 +1,272 @@
-// Canvas Background Animation
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
+/**
+ * Anti-Gravity Explainer - Interactive Features
+ * Canvas particle system, 3D card effects, and glitch animations
+ */
 
-let width, height;
-let particles = [];
+// =============================================================================
+// CONFIGURATION
+// =============================================================================
 
-// Configuration
-const PARTICLE_COUNT = 60;
-const CONNECTION_DISTANCE = 150;
-const MOUSE_DISTANCE = 200;
+const CONFIG = {
+  particles: {
+    count: 60,
+    connectionDistance: 150,
+    speed: 0.5,
+    minSize: 1,
+    maxSize: 3,
+  },
+  tilt: {
+    maxRotation: 10,
+    scale: 1.02,
+    perspective: 1000,
+  },
+  glitch: {
+    triggerChance: 0.05,
+    checkInterval: 2000,
+    revealSpeed: 30,
+    characters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&',
+  },
+};
+
+// =============================================================================
+// PARTICLE SYSTEM
+// =============================================================================
 
 class Particle {
-    constructor() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
-        this.size = Math.random() * 2 + 1;
-    }
+  constructor(canvasWidth, canvasHeight) {
+    this.reset(canvasWidth, canvasHeight);
+  }
 
-    update() {
-        this.x += this.vx;
-        this.y += this.vy;
+  reset(width, height) {
+    this.x = Math.random() * width;
+    this.y = Math.random() * height;
+    this.vx = (Math.random() - 0.5) * CONFIG.particles.speed;
+    this.vy = (Math.random() - 0.5) * CONFIG.particles.speed;
+    this.size = Math.random() * (CONFIG.particles.maxSize - CONFIG.particles.minSize) + CONFIG.particles.minSize;
+  }
 
-        // Bounce off edges
-        if (this.x < 0 || this.x > width) this.vx *= -1;
-        if (this.y < 0 || this.y > height) this.vy *= -1;
-    }
+  update(width, height) {
+    this.x += this.vx;
+    this.y += this.vy;
 
-    draw() {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-    }
+    // Bounce off edges
+    if (this.x < 0 || this.x > width) this.vx *= -1;
+    if (this.y < 0 || this.y > height) this.vy *= -1;
+
+    // Keep within bounds
+    this.x = Math.max(0, Math.min(width, this.x));
+    this.y = Math.max(0, Math.min(height, this.y));
+  }
+
+  draw(ctx) {
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
 }
 
-function initCanvas() {
-    resizeCanvas();
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push(new Particle());
+class ParticleSystem {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    if (!this.canvas) return;
+
+    this.ctx = this.canvas.getContext('2d');
+    this.particles = [];
+    this.animationId = null;
+
+    this.init();
+    this.bindEvents();
+  }
+
+  init() {
+    this.resize();
+    this.createParticles();
+    this.animate();
+  }
+
+  resize() {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
+  }
+
+  createParticles() {
+    this.particles = [];
+    for (let i = 0; i < CONFIG.particles.count; i++) {
+      this.particles.push(new Particle(this.width, this.height));
     }
-    animate();
-}
+  }
 
-function resizeCanvas() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-}
+  drawConnections() {
+    const { connectionDistance } = CONFIG.particles;
 
-function animate() {
-    ctx.clearRect(0, 0, width, height);
+    for (let i = 0; i < this.particles.length; i++) {
+      for (let j = i + 1; j < this.particles.length; j++) {
+        const dx = this.particles[i].x - this.particles[j].x;
+        const dy = this.particles[i].y - this.particles[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
 
-    particles.forEach(p => {
-        p.update();
-        p.draw();
+        if (distance < connectionDistance) {
+          const opacity = (1 - distance / connectionDistance) * 0.1;
+          this.ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+          this.ctx.lineWidth = 1;
+          this.ctx.beginPath();
+          this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+          this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+          this.ctx.stroke();
+        }
+      }
+    }
+  }
+
+  animate() {
+    this.ctx.clearRect(0, 0, this.width, this.height);
+
+    this.particles.forEach(particle => {
+      particle.update(this.width, this.height);
+      particle.draw(this.ctx);
     });
 
-    // Draw connections
-    for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+    this.drawConnections();
+    this.animationId = requestAnimationFrame(() => this.animate());
+  }
 
-            if (distance < CONNECTION_DISTANCE) {
-                ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / CONNECTION_DISTANCE * 0.1})`;
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(particles[i].x, particles[i].y);
-                ctx.lineTo(particles[j].x, particles[j].y);
-                ctx.stroke();
-            }
-        }
+  bindEvents() {
+    window.addEventListener('resize', () => {
+      this.resize();
+      this.createParticles();
+    });
+  }
+
+  destroy() {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
     }
-
-    requestAnimationFrame(animate);
+  }
 }
 
-window.addEventListener('resize', () => {
-    resizeCanvas();
-    particles = []; // Reset particles on resize to avoid clustering
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push(new Particle());
-    }
-});
+// =============================================================================
+// 3D TILT EFFECT
+// =============================================================================
 
-initCanvas();
+class TiltEffect {
+  constructor(selector) {
+    this.cards = document.querySelectorAll(selector);
+    this.bindEvents();
+  }
 
+  bindEvents() {
+    this.cards.forEach(card => {
+      card.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+      card.addEventListener('mouseleave', (e) => this.handleMouseLeave(e));
+    });
+  }
 
-// 3D Tilt Effect for Cards
-const cards = document.querySelectorAll('.tilt-card');
-
-cards.forEach(card => {
-    card.addEventListener('mousemove', handleMouseMove);
-    card.addEventListener('mouseleave', handleMouseLeave);
-});
-
-function handleMouseMove(e) {
+  handleMouseMove(e) {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
-    // Calculate rotation
+
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    
-    const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg rotation
-    const rotateY = ((x - centerX) / centerX) * 10;
 
-    // Apply transform
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-    
-    // Update glow position
+    const { maxRotation, scale, perspective } = CONFIG.tilt;
+    const rotateX = ((y - centerY) / centerY) * -maxRotation;
+    const rotateY = ((x - centerX) / centerX) * maxRotation;
+
+    card.style.transform = `perspective(${perspective}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(${scale}, ${scale}, ${scale})`;
+
+    // Update glow position via CSS custom properties
     card.style.setProperty('--mouse-x', `${x}px`);
     card.style.setProperty('--mouse-y', `${y}px`);
-}
+  }
 
-function handleMouseLeave(e) {
+  handleMouseLeave(e) {
     const card = e.currentTarget;
-    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+    const { perspective } = CONFIG.tilt;
+    card.style.transform = `perspective(${perspective}px) rotateX(0) rotateY(0) scale3d(1, 1, 1)`;
+  }
 }
 
-// Glitch Text Effect (Simple Random Character Swap)
-const glitchText = document.querySelector('.glitch-text');
-const originalText = glitchText.getAttribute('data-text');
-const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
+// =============================================================================
+// GLITCH TEXT EFFECT
+// =============================================================================
 
-function randomGlitch() {
-    if (Math.random() > 0.95) { // 5% chance to glitch per frame check
-        let iterations = 0;
-        const interval = setInterval(() => {
-            glitchText.innerText = originalText
-                .split('')
-                .map((letter, index) => {
-                    if (index < iterations) {
-                        return originalText[index];
-                    }
-                    return chars[Math.floor(Math.random() * 26)];
-                })
-                .join('');
-            
-            if (iterations >= originalText.length) { 
-                clearInterval(interval);
-            }
-            
-            iterations += 1 / 3;
-        }, 30);
+class GlitchText {
+  constructor(selector) {
+    this.element = document.querySelector(selector);
+    if (!this.element) return;
+
+    this.originalText = this.element.getAttribute('data-text') || this.element.textContent;
+    this.isAnimating = false;
+    this.intervalId = null;
+
+    this.startRandomGlitches();
+  }
+
+  glitch() {
+    if (this.isAnimating) return;
+    this.isAnimating = true;
+
+    const { revealSpeed, characters } = CONFIG.glitch;
+    let iterations = 0;
+
+    const interval = setInterval(() => {
+      this.element.textContent = this.originalText
+        .split('')
+        .map((letter, index) => {
+          if (index < iterations) {
+            return this.originalText[index];
+          }
+          if (letter === ' ') return ' ';
+          return characters[Math.floor(Math.random() * characters.length)];
+        })
+        .join('');
+
+      if (iterations >= this.originalText.length) {
+        clearInterval(interval);
+        this.isAnimating = false;
+      }
+
+      iterations += 1 / 3;
+    }, revealSpeed);
+  }
+
+  startRandomGlitches() {
+    const { triggerChance, checkInterval } = CONFIG.glitch;
+
+    this.intervalId = setInterval(() => {
+      if (Math.random() < triggerChance) {
+        this.glitch();
+      }
+    }, checkInterval);
+  }
+
+  destroy() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
     }
+  }
 }
 
-setInterval(randomGlitch, 2000);
+// =============================================================================
+// INITIALIZATION
+// =============================================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize all interactive features
+  const particleSystem = new ParticleSystem('bg-canvas');
+  const tiltEffect = new TiltEffect('.tilt-card');
+  const glitchText = new GlitchText('.glitch-text');
+
+  // Expose for debugging (optional, remove in production)
+  window.__antiGravity = {
+    particleSystem,
+    tiltEffect,
+    glitchText,
+    config: CONFIG,
+  };
+});

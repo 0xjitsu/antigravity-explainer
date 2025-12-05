@@ -1,0 +1,31 @@
+{
+  "name": "antigravity-explainer",
+  "version": "1.0.0",
+  "description": "Interactive educational website explaining the Anti-Gravity agentic coding workflow",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "lint": "npm run lint:html && npm run lint:css",
+    "lint:html": "html-validate index.html",
+    "lint:css": "stylelint \"**/*.css\""
+  },
+  "keywords": [
+    "agentic-coding",
+    "educational",
+    "static-site",
+    "glassmorphism"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "html-validate": "^8.9.0",
+    "serve": "^14.2.1",
+    "stylelint": "^16.1.0",
+    "stylelint-config-standard": "^36.0.0"
+  }
+}
