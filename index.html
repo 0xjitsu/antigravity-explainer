@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anti-Gravity | Enter the Flow State</title>
     <meta name="description" content="Anti-Gravity — where code writes itself. An agentic development environment that responds to your presence.">
+    <meta name="theme-color" content="#030303">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,38 +19,39 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◉</text></svg>">
 </head>
 <body>
-    <canvas id="bg-canvas"></canvas>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-    <nav class="glass-nav">
+    <nav class="glass-nav" aria-label="Main navigation">
         <div class="logo">ANTI-GRAVITY</div>
         <!-- Presence toggle injected by JS -->
-        <div class="status-indicator">
-            <span class="dot"></span>
+        <div class="status-indicator" role="status" aria-live="polite">
+            <span class="dot" aria-hidden="true"></span>
             <span>System Online</span>
         </div>
     </nav>
 
     <main>
-        <section id="hero" class="hero-section">
+        <section id="hero" class="hero-section" aria-labelledby="hero-title">
             <div class="hero-content">
-                <h1 class="glitch-text" data-text="DEFY THE FRICTION">DEFY THE FRICTION</h1>
+                <h1 id="hero-title" class="glitch-text" data-text="DEFY THE FRICTION">DEFY THE FRICTION</h1>
                 <p class="subtitle">
                     A development environment that responds to your presence.
                     Think less about tooling. Build at the speed of thought.
                 </p>
-                <div class="scroll-indicator">
+                <div class="scroll-indicator" aria-hidden="true">
                     <span>ENTER THE SYSTEM</span>
                     <div class="arrow">↓</div>
                 </div>
             </div>
         </section>
 
-        <section id="concepts" class="cards-container">
-            <!-- Card 1: Inbox -->
-            <div class="glass-card tilt-card" data-tilt>
+        <section id="concepts" class="cards-container" aria-labelledby="concepts-heading">
+            <h2 id="concepts-heading" class="visually-hidden">Core Concepts</h2>
+
+            <article class="glass-card tilt-card" data-tilt aria-labelledby="inbox-title">
                 <div class="card-content">
-                    <div class="icon-box">◈</div>
-                    <h2>The Inbox</h2>
+                    <div class="icon-box" aria-hidden="true">◈</div>
+                    <h3 id="inbox-title">The Inbox</h3>
                     <p class="mono-text">SIGNAL PROCESSING</p>
                     <p class="description">
                         Raw ideas land here before becoming reality.
@@ -57,14 +59,13 @@
                         for everything that demands attention.
                     </p>
                 </div>
-                <div class="card-glow"></div>
-            </div>
+                <div class="card-glow" aria-hidden="true"></div>
+            </article>
 
-            <!-- Card 2: Playground -->
-            <div class="glass-card tilt-card" data-tilt>
+            <article class="glass-card tilt-card" data-tilt aria-labelledby="playground-title">
                 <div class="card-content">
-                    <div class="icon-box">◎</div>
-                    <h2>The Playground</h2>
+                    <div class="icon-box" aria-hidden="true">◎</div>
+                    <h3 id="playground-title">The Playground</h3>
                     <p class="mono-text">ZERO CONSEQUENCE ZONE</p>
                     <p class="description">
                         Break things on purpose. Prototype without fear.
@@ -72,14 +73,13 @@
                         decide otherwise. Chaos is the point.
                     </p>
                 </div>
-                <div class="card-glow"></div>
-            </div>
+                <div class="card-glow" aria-hidden="true"></div>
+            </article>
 
-            <!-- Card 3: Workspaces -->
-            <div class="glass-card tilt-card" data-tilt>
+            <article class="glass-card tilt-card" data-tilt aria-labelledby="workspaces-title">
                 <div class="card-content">
-                    <div class="icon-box">◐</div>
-                    <h2>The Workspace</h2>
+                    <div class="icon-box" aria-hidden="true">◐</div>
+                    <h3 id="workspaces-title">The Workspace</h3>
                     <p class="mono-text">PERSISTENT STATE</p>
                     <p class="description">
                         Where momentum compounds. Long-running projects
@@ -87,19 +87,19 @@
                         what you built, why you built it, and what's next.
                     </p>
                 </div>
-                <div class="card-glow"></div>
-            </div>
+                <div class="card-glow" aria-hidden="true"></div>
+            </article>
         </section>
 
-        <section id="philosophy" class="split-section">
+        <section id="philosophy" class="split-section" aria-labelledby="philosophy-heading">
             <div class="glass-panel">
-                <h2>Local-First Architecture</h2>
-                <div class="diagram-container">
+                <h2 id="philosophy-heading">Local-First Architecture</h2>
+                <div class="diagram-container" role="img" aria-label="Diagram showing local machine as primary, cloud as secondary">
                     <div class="node local">
                         <span class="node-label">YOUR MACHINE</span>
                         <div class="node-dot"></div>
                     </div>
-                    <div class="connection-line"></div>
+                    <div class="connection-line" aria-hidden="true"></div>
                     <div class="node cloud dimmed">
                         <span class="node-label">CLOUD</span>
                         <div class="node-dot"></div>
@@ -120,7 +120,7 @@
                     <li>Document in <code>/context</code></li>
                     <li>Sync anywhere you want</li>
                 </ul>
-                <button class="action-btn">INITIALIZE PROTOCOL</button>
+                <button class="action-btn" type="button" aria-label="Initialize Git repository">INITIALIZE PROTOCOL</button>
             </div>
         </section>
     </main>

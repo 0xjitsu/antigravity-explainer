@@ -516,14 +516,16 @@ function drawHandIndicators() {
 // ─────────────────────────────────────────────────────────────────────────────
 function createPresenceIndicator() {
     const nav = document.querySelector('.glass-nav');
+    if (!nav) return;
 
     const presenceBtn = document.createElement('button');
     presenceBtn.className = 'presence-toggle';
+    presenceBtn.setAttribute('type', 'button');
+    presenceBtn.setAttribute('aria-label', 'Enable hand tracking for interactive experience');
     presenceBtn.innerHTML = `
-        <span class="presence-icon">◉</span>
+        <span class="presence-icon" aria-hidden="true">◉</span>
         <span class="presence-text">PRESENCE</span>
     `;
-    presenceBtn.title = 'Enable hand tracking';
 
     presenceBtn.addEventListener('click', async () => {
         if (!state.handTrackingActive) {
@@ -535,7 +537,11 @@ function createPresenceIndicator() {
 
     // Insert before status indicator
     const statusIndicator = nav.querySelector('.status-indicator');
-    nav.insertBefore(presenceBtn, statusIndicator);
+    if (statusIndicator) {
+        nav.insertBefore(presenceBtn, statusIndicator);
+    } else {
+        nav.appendChild(presenceBtn);
+    }
 
     // Show hint after delay
     setTimeout(() => {
@@ -555,15 +561,18 @@ function updatePresenceIndicator(status) {
     if (!presenceBtn) return;
 
     presenceBtn.classList.remove('loading', 'active', 'unavailable');
+    const textSpan = presenceBtn.querySelector('.presence-text');
 
     switch (status) {
         case 'active':
             presenceBtn.classList.add('active');
-            presenceBtn.querySelector('.presence-text').textContent = 'CONNECTED';
+            if (textSpan) textSpan.textContent = 'CONNECTED';
+            presenceBtn.setAttribute('aria-label', 'Hand tracking active');
             break;
         case 'unavailable':
             presenceBtn.classList.add('unavailable');
-            presenceBtn.querySelector('.presence-text').textContent = 'UNAVAILABLE';
+            if (textSpan) textSpan.textContent = 'UNAVAILABLE';
+            presenceBtn.setAttribute('aria-label', 'Hand tracking unavailable');
             break;
     }
 }
@@ -593,7 +602,7 @@ function initScrollAnimations() {
     // Scroll progress for particles
     window.addEventListener('scroll', () => {
         state.scrollProgress = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-    });
+    }, { passive: true });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -673,14 +682,14 @@ function initGlitchEffect() {
     const glitchText = document.querySelector('.glitch-text');
     if (!glitchText) return;
 
-    const originalText = glitchText.getAttribute('data-text');
+    const originalText = glitchText.getAttribute('data-text') || glitchText.textContent;
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>[]{}';
 
     function randomGlitch() {
         if (Math.random() > 0.92) {
             let iterations = 0;
             const interval = setInterval(() => {
-                glitchText.innerText = originalText
+                glitchText.textContent = originalText
                     .split('')
                     .map((letter, index) => {
                         if (letter === ' ') return ' ';
@@ -708,7 +717,7 @@ function initMouseTracking() {
     document.addEventListener('mousemove', (e) => {
         state.mouseX = e.clientX;
         state.mouseY = e.clientY;
-    });
+    }, { passive: true });
 
     // Click to create ripple
     document.addEventListener('click', (e) => {

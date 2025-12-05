@@ -51,6 +51,19 @@
     box-sizing: border-box;
 }
 
+/* Accessibility - Screen reader only */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
@@ -143,9 +156,16 @@ body {
     transition: transform 0.6s var(--ease-out-expo);
 }
 
-.presence-toggle:hover {
+.presence-toggle:hover,
+.presence-toggle:focus {
     border-color: var(--accent-cyan);
     color: var(--accent-cyan);
+    outline: none;
+}
+
+.presence-toggle:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 2px;
 }
 
 .presence-toggle:hover::before {
@@ -316,9 +336,9 @@ h1.glitch-text {
 }
 
 /* Staggered card animations */
-.cards-container.visible .glass-card:nth-child(1) { transition-delay: 0ms; }
-.cards-container.visible .glass-card:nth-child(2) { transition-delay: 100ms; }
-.cards-container.visible .glass-card:nth-child(3) { transition-delay: 200ms; }
+.cards-container.visible .glass-card:nth-child(2) { transition-delay: 0ms; }
+.cards-container.visible .glass-card:nth-child(3) { transition-delay: 100ms; }
+.cards-container.visible .glass-card:nth-child(4) { transition-delay: 200ms; }
 
 .cards-container .glass-card {
     opacity: 0;
@@ -372,11 +392,13 @@ h1.glitch-text {
     transition: opacity var(--duration-normal);
 }
 
-.glass-card:hover::before {
+.glass-card:hover::before,
+.glass-card:focus-within::before {
     opacity: 1;
 }
 
-.glass-card:hover {
+.glass-card:hover,
+.glass-card:focus-within {
     background: var(--glass-bg-hover);
     border-color: var(--glass-border-hover);
 }
@@ -394,7 +416,8 @@ h1.glitch-text {
     filter: drop-shadow(0 0 20px rgba(255,255,255,0.15));
 }
 
-.glass-card h2 {
+.glass-card h2,
+.glass-card h3 {
     font-size: 1.75rem;
     font-weight: 600;
     margin-bottom: var(--space-sm);
@@ -604,12 +627,20 @@ h1.glitch-text {
     z-index: -1;
 }
 
-.action-btn:hover {
+.action-btn:hover,
+.action-btn:focus {
     color: var(--bg-void);
     box-shadow: 0 0 30px var(--accent-cyan-glow);
+    outline: none;
 }
 
-.action-btn:hover::before {
+.action-btn:focus-visible {
+    outline: 2px solid var(--accent-cyan);
+    outline-offset: 2px;
+}
+
+.action-btn:hover::before,
+.action-btn:focus::before {
     transform: scaleX(1);
 }
 
@@ -686,7 +717,8 @@ footer {
         font-size: 2rem;
     }
 
-    .glass-card h2 {
+    .glass-card h2,
+    .glass-card h3 {
         font-size: 1.4rem;
     }
 }
