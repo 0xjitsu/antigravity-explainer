@@ -14,6 +14,8 @@ const CONFIG = {
     speed: 0.5,
     minSize: 1,
     maxSize: 3,
+    mouseRadius: 150,
+    mouseForce: 0.15,
   },
   tilt: {
     maxRotation: 10,
@@ -25,6 +27,12 @@ const CONFIG = {
     checkInterval: 2000,
     revealSpeed: 30,
     characters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&',
+  },
+  gesture: {
+    trailLength: 20,
+    trailFadeSpeed: 0.05,
+    cursorSize: 20,
+    cursorGlow: 15,
   },
 };
 
@@ -74,6 +82,8 @@ class ParticleSystem {
     this.ctx = this.canvas.getContext('2d');
     this.particles = [];
     this.animationId = null;
+    this.mouse = { x: -1000, y: -1000, isMoving: false };
+    this.trail = [];
 
     this.init();
     this.bindEvents();
@@ -124,19 +134,142 @@ class ParticleSystem {
   animate() {
     this.ctx.clearRect(0, 0, this.width, this.height);
 
+    // Update and draw particles with mouse interaction
+    const { mouseRadius, mouseForce } = CONFIG.particles;
+
     this.particles.forEach(particle => {
+      // Mouse repulsion effect
+      const dx = particle.x - this.mouse.x;
+      const dy = particle.y - this.mouse.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < mouseRadius && distance > 0) {
+        const force = (mouseRadius - distance) / mouseRadius * mouseForce;
+        particle.vx += (dx / distance) * force;
+        particle.vy += (dy / distance) * force;
+
+        // Limit velocity
+        const maxSpeed = 3;
+        const speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+        if (speed > maxSpeed) {
+          particle.vx = (particle.vx / speed) * maxSpeed;
+          particle.vy = (particle.vy / speed) * maxSpeed;
+        }
+      }
+
+      // Gradually slow down
+      particle.vx *= 0.99;
+      particle.vy *= 0.99;
+
+      // Maintain minimum speed
+      const minSpeed = CONFIG.particles.speed * 0.5;
+      const currentSpeed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+      if (currentSpeed < minSpeed) {
+        particle.vx += (Math.random() - 0.5) * 0.1;
+        particle.vy += (Math.random() - 0.5) * 0.1;
+      }
+
       particle.update(this.width, this.height);
       particle.draw(this.ctx);
     });
 
     this.drawConnections();
+    this.drawGestureTrail();
+    this.drawCursor();
+
     this.animationId = requestAnimationFrame(() => this.animate());
+  }
+
+  drawGestureTrail() {
+    if (this.trail.length < 2) return;
+
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.trail[0].x, this.trail[0].y);
+
+    for (let i = 1; i < this.trail.length; i++) {
+      const point = this.trail[i];
+      const prevPoint = this.trail[i - 1];
+      const midX = (prevPoint.x + point.x) / 2;
+      const midY = (prevPoint.y + point.y) / 2;
+      this.ctx.quadraticCurveTo(prevPoint.x, prevPoint.y, midX, midY);
+    }
+
+    // Create gradient for trail
+    const gradient = this.ctx.createLinearGradient(
+      this.trail[0].x, this.trail[0].y,
+      this.trail[this.trail.length - 1].x, this.trail[this.trail.length - 1].y
+    );
+    gradient.addColorStop(0, 'rgba(0, 243, 255, 0)');
+    gradient.addColorStop(1, 'rgba(0, 243, 255, 0.6)');
+
+    this.ctx.strokeStyle = gradient;
+    this.ctx.lineWidth = 2;
+    this.ctx.lineCap = 'round';
+    this.ctx.stroke();
+
+    // Fade out old trail points
+    this.trail = this.trail.filter((_, i) => i > this.trail.length - CONFIG.gesture.trailLength);
+  }
+
+  drawCursor() {
+    if (this.mouse.x < 0 || this.mouse.y < 0) return;
+
+    const { cursorSize, cursorGlow } = CONFIG.gesture;
+
+    // Outer glow
+    const gradient = this.ctx.createRadialGradient(
+      this.mouse.x, this.mouse.y, 0,
+      this.mouse.x, this.mouse.y, cursorSize + cursorGlow
+    );
+    gradient.addColorStop(0, 'rgba(0, 243, 255, 0.3)');
+    gradient.addColorStop(0.5, 'rgba(0, 243, 255, 0.1)');
+    gradient.addColorStop(1, 'rgba(0, 243, 255, 0)');
+
+    this.ctx.beginPath();
+    this.ctx.arc(this.mouse.x, this.mouse.y, cursorSize + cursorGlow, 0, Math.PI * 2);
+    this.ctx.fillStyle = gradient;
+    this.ctx.fill();
+
+    // Inner ring
+    this.ctx.beginPath();
+    this.ctx.arc(this.mouse.x, this.mouse.y, cursorSize / 2, 0, Math.PI * 2);
+    this.ctx.strokeStyle = 'rgba(0, 243, 255, 0.8)';
+    this.ctx.lineWidth = 2;
+    this.ctx.stroke();
+
+    // Center dot
+    this.ctx.beginPath();
+    this.ctx.arc(this.mouse.x, this.mouse.y, 3, 0, Math.PI * 2);
+    this.ctx.fillStyle = '#00f3ff';
+    this.ctx.fill();
   }
 
   bindEvents() {
     window.addEventListener('resize', () => {
       this.resize();
       this.createParticles();
+    });
+
+    // Mouse tracking for gesture effects
+    window.addEventListener('mousemove', (e) => {
+      this.mouse.x = e.clientX;
+      this.mouse.y = e.clientY;
+      this.mouse.isMoving = true;
+
+      // Add to trail
+      this.trail.push({ x: e.clientX, y: e.clientY, time: Date.now() });
+
+      // Limit trail length
+      if (this.trail.length > CONFIG.gesture.trailLength) {
+        this.trail.shift();
+      }
+    });
+
+    window.addEventListener('mouseleave', () => {
+      this.mouse.x = -1000;
+      this.mouse.y = -1000;
+      this.mouse.isMoving = false;
+      this.trail = [];
     });
   }
 
